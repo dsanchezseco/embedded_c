@@ -1,4 +1,4 @@
-CC = arm-none-eabi-gcc
+CC = arm-none-eabi-gcc -I .
 CFLAGS = -c -mcpu=cortex-m4 -mthumb -std=gnu11
 LDFLAGS = -nostdlib -T ../stm32_ls.ld -Wl,-Map=$@.map
 
