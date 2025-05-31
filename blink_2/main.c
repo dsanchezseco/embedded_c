@@ -88,45 +88,31 @@ int main(void) {
 	// Set input (00) mode for button
 	GPIOC_MODER &= ~(0x3U << (BUTTON_BIT * 2));
 
-	uint8_t counter = 0;
+	uint8_t counter = 1;
 
+	// initial status only RED on
+	GPIOC_ODR &= ~GREEN_LED_PIN;
+	GPIOB_ODR &= ~(RED_LED_PIN | BLUE_LED_PIN); 
+	GPIOB_ODR |= RED_LED_PIN;
+	
 	// main loop
 	while(1) {
 		// button status, read registry then shift to keep only relevant bit (0 or 1)
 		unsigned int button_status = (GPIOC_IDR & BUTTON) >> BUTTON_BIT;
+
+		// if button pressed flip RED led registry to change blink effect
+		if(button_status){
+			GPIOC_ODR |= GREEN_LED_PIN; // signal button pressed
+			GPIOB_ODR ^= RED_LED_PIN;
+			// simple debounce
+			for(int i = 0; i<50000; i++){}
+			GPIOC_ODR &= ~GREEN_LED_PIN;
+		}
+
 		// only if button pressed turn on led
-		if (button_status){
-			counter++;
-			//simple button debouncer
-			for(int i=0; i<500000; i++){}
-		}
+		counter = counter << 1;
+		GPIOB_ODR ^= (RED_LED_PIN | BLUE_LED_PIN);
 
-		if (counter == 0)
-		{
-			// LED ON
-			GPIOC_ODR |= GREEN_LED_PIN;
-
-			GPIOB_ODR &= ~RED_LED_PIN;
-			GPIOB_ODR &= ~BLUE_LED_PIN;
-		} else if (counter == 1)
-		{
-			GPIOB_ODR |= BLUE_LED_PIN;
-
-			GPIOC_ODR &= ~GREEN_LED_PIN;
-			GPIOB_ODR &= ~RED_LED_PIN;
-		}else if (counter == 2){
-			GPIOB_ODR |= RED_LED_PIN;
-
-			GPIOC_ODR &= ~GREEN_LED_PIN;
-			GPIOB_ODR &= ~BLUE_LED_PIN;
-		}else{
-			counter = 0;
-		}
-		// }else{
-		// 	// LED OFF
-		// 	GPIOC_ODR &= ~GREEN_LED_PIN;
-		// 	GPIOB_ODR &= ~RED_LED_PIN;
-		// 	GPIOB_ODR &= ~BLUE_LED_PIN;
-		// }
+		for(int i = 0; i<50000; i++){}
 	}
 }
