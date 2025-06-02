@@ -1,6 +1,9 @@
 CC = arm-none-eabi-gcc -I .
-CFLAGS = -c -mcpu=cortex-m4 -mthumb -std=gnu11
+TARGET_CHIP = -DSTM32L4R5xx
+CMSIS = -I chip_headers/CMSIS/Include -I chip_headers/CMSIS/Device/ST/STM32L4xx/Include
+CFLAGS = -c -mcpu=cortex-m4 -mthumb -std=gnu11 $(CMSIS) $(TARGET_CHIP)
 LDFLAGS = -nostdlib -T ../stm32_ls.ld -Wl,-Map=$@.map
+
 
 BINARY = blink_2.elf
 TARGET_BOARD = st_nucleo_l4.cfg
@@ -30,3 +33,6 @@ flash: $(BINARY)
 # delete all generated files
 clean:
 	rm -f *.o *.elf *.map
+
+
+rebuild: clean build
