@@ -3,6 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
+                "${workspaceFolder}/chip_headers/**",
                 "${workspaceFolder}/**"
             ],
             "defines": [],
