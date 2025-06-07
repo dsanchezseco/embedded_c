@@ -6,7 +6,9 @@
                 "${workspaceFolder}/chip_headers/**",
                 "${workspaceFolder}/**"
             ],
-            "defines": [],
+            "defines": [
+                "STM32L4R5xx"
+            ],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++14",
