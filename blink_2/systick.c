@@ -9,6 +9,12 @@
 #define MSIRANGE_SHIFT 4
 #define MSIRANGE_MAX 11
 
+
+void update_clock_speed_var(void){
+    for(int i=0; i<20; i++){} //wait for the change to propagate
+    SystemCoreClockUpdate();
+}
+
 void systick_init(uint8_t clock_selector){
     // init clock_selector at 4MHz
 	
@@ -19,7 +25,32 @@ void systick_init(uint8_t clock_selector){
 	RCC->CR &= ~(0b1111 << MSIRANGE_SHIFT);
 	// Set desired speed
 	RCC->CR |= clock_selector << MSIRANGE_SHIFT;
-    SystemCoreClockUpdate();
+    update_clock_speed_var();
+}
+
+uint8_t cycle_clock_speed(uint8_t clock_selector)
+{
+
+	if((RCC->CR & MSION_MASK) ^ (RCC->CR & MSIRDY_MASK)){
+        clock_selector++;
+        if (clock_selector > MSIRANGE_MAX)
+        {
+            clock_selector = 0;
+        }
+        
+        // Clear current value
+        RCC->CR &= ~(0b1111 << MSIRANGE_SHIFT);
+        // Set desired speed
+        RCC->CR |= clock_selector << MSIRANGE_SHIFT;
+        update_clock_speed_var();
+        for(int i=0; i<clock_selector + 1; i++ ){
+            toogle_led(GPIOC, GREEN_LED_PIN);
+            systick_msec_delay(200);
+            toogle_led(GPIOC, GREEN_LED_PIN);
+            systick_msec_delay(200);
+        }
+	}
+	return clock_selector;
 }
 
 void systick_msec_delay(uint32_t delay)
@@ -48,29 +79,4 @@ void systick_msec_delay(uint32_t delay)
 
     // disable SysTick to save resources
     SysTick->CTRL = 0;
-}
-
-uint8_t cycle_clock_speed(uint8_t clock_selector)
-{
-
-	if((RCC->CR & MSION_MASK) ^ (RCC->CR & MSIRDY_MASK)){
-        clock_selector++;
-        if (clock_selector > MSIRANGE_MAX)
-        {
-            clock_selector = 0;
-        }
-        
-        // Clear current value
-        RCC->CR &= ~(0b1111 << MSIRANGE_SHIFT);
-        // Set desired speed
-        RCC->CR |= clock_selector << MSIRANGE_SHIFT;
-        SystemCoreClockUpdate();
-        for(int i=0; i<clock_selector + 1; i++ ){
-            toogle_led(GPIOC, GREEN_LED_PIN);
-            systick_msec_delay(200);
-            toogle_led(GPIOC, GREEN_LED_PIN);
-            systick_msec_delay(200);
-        }
-	}
-	return clock_selector;
 }
