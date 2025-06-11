@@ -8,7 +8,7 @@ LDFLAGS = -nostdlib -T ../stm32_ls.ld -Wl,-Map=$@.map
 BINARY = blink_2.elf
 TARGET_BOARD = st_nucleo_l4.cfg
 
-OBJECTS = main.o gpio.o systick.o stm32L4R5ZIT6PU_startup.o
+OBJECTS = main.o gpio.o systick.o stm32L4R5ZIT6PU_startup.o system_stm32l4xx.o
 
 # Compile .c files
 %.o: %.c
