@@ -2,7 +2,7 @@ CC = arm-none-eabi-gcc -I headers
 TARGET_CHIP = -DSTM32L4R5xx
 CMSIS = -I chip_headers/CMSIS/Include -I chip_headers/CMSIS/Device/ST/STM32L4xx/Include
 CFLAGS = -c -mcpu=cortex-m4 -mthumb -std=gnu11 $(CMSIS) $(TARGET_CHIP)
-LDFLAGS = -nostdlib -T ../stm32_ls.ld -Wl,-Map=$@.map
+LDFLAGS = -T ../stm32_ls.ld -Wl,-Map=$@.map -specs=nosys.specs -specs=nano.specs
 OBJECTS = system_stm32l4xx.o stm32L4R5ZIT6PU_startup.o
 
 BINARY = uart.elf

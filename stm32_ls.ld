@@ -41,10 +41,13 @@ SECTIONS
     .bss : 
     {
         . = ALIGN(4);
-        _sbss = .;
+        __bss_start__ = .;
         *(.bss)
         . = ALIGN(4);
-        _ebss = .;
+        __bss_end__ = .;
     }> SRAM
 
+    PROVIDE(_ebss = __bss_end__);
+    PROVIDE(_sbss = __bss_start__);
+    PROVIDE(end = __bss_end__);
 }
