@@ -17,12 +17,9 @@ int main(void)
     // main loop
     while (1)
     {
-        __io_putchar('h');
-        __io_putchar('i');
-        __io_putchar('!');
-        __io_putchar('\n');
-        __io_putchar('\r');
-
-        for(int i = 0; i<20000; i++){}
+        write("Hello (embedded) world!\r\n", 25);
+        for (int i = 0; i < 200000; i++)
+        {
+        }
     }
 }

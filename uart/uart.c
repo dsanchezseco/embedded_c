@@ -61,8 +61,17 @@ static void uart_write(uint8_t byte)
     LPUART1->TDR = 0xFF & byte;
 }
 
-int __io_putchar(int ch)
+int __io_putchar(char ch)
 {
     uart_write((uint8_t) ch);
     return ch;
+}
+
+int write(char *ptr, int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        __io_putchar(ptr[i]);
+    }
+    return len;
 }

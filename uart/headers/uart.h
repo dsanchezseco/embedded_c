@@ -5,6 +5,6 @@
 #include "stm32l4xx.h"
 
 void uart_init(void);
-int __io_putchar(int);
+int write (char*, int);
 
 #endif // __UART_H
